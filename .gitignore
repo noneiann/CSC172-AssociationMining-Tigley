@@ -1,0 +1,20 @@
+# Datasets - too large for GitHub
+datasets/*.csv
+datasets/*.txt
+!datasets/README.txt
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
