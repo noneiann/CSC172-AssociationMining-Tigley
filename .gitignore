@@ -2,6 +2,12 @@
 datasets/*.csv
 datasets/*.txt
 !datasets/README.txt
+datasets/rules.pkl
+datasets/raw/genome-scores.csv
+# # Output files
+# output/visualizations/*.png
+# output/visualizations/*.jpg
+# output/visualizations/*.pdf
 
 # Python
 __pycache__/
@@ -12,9 +18,24 @@ __pycache__/
 env/
 venv/
 *.egg-info/
+dist/
+build/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
