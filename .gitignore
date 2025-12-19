@@ -1,13 +1,16 @@
 # Datasets - too large for GitHub
+datasets/raw/*.csv
+datasets/formatted/*.csv
+datasets/cleaned/*.csv
 datasets/*.csv
 datasets/*.txt
+datasets/*.pkl
 !datasets/README.txt
-datasets/rules.pkl
-datasets/raw/genome-scores.csv
-# # Output files
-# output/visualizations/*.png
-# output/visualizations/*.jpg
-# output/visualizations/*.pdf
+
+# Output files
+output/visualizations/*.png
+output/visualizations/*.jpg
+output/visualizations/*.pdf
 
 # Python
 __pycache__/
