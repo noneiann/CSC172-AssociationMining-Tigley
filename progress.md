@@ -100,5 +100,5 @@ For dataset formatting, I merged the tag and movie IDs to their respective names
 
 ## 4. Next Steps (Before Final Submission)
 
-- [ ] Record 5-min demo video
-- [ ] Write complete README.md with results
+- [x] Record 5-min demo video
+- [x] Write complete README.md with results
