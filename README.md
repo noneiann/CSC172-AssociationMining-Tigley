@@ -109,16 +109,16 @@ These approaches fail to capture **semantic nuances**. A user who enjoys "Tarant
 ┌─────────────────────────────────┐
 │  Step 1: Transformer Analysis   │
 │  • Load all-MiniLM-L6-v2 model  │
-│  • Compute tag embeddings        │
+│  • Compute tag embeddings       │
 │  • Find similar pairs (>0.7)    │
-│  • Manual curation               │
+│  • Manual curation              │
 └───────────┬─────────────────────┘
             │
             ▼
 ┌─────────────────────────────────┐
 │  Step 2: Tag Cleaning           │
-│  • 217 synonym mappings          │
-│  • 118 stop-tag filters          │
+│  • 217 synonym mappings         │
+│  • 118 stop-tag filters         │
 │  • Relevance thresholding (0.4) │
 └───────────┬─────────────────────┘
             │
@@ -126,22 +126,22 @@ These approaches fail to capture **semantic nuances**. A user who enjoys "Tarant
 ┌─────────────────────────────────┐
 │  Step 3: Transaction Formation  │
 │  • Keep tags in >500 movies     │
-│  • One-hot encoding              │
-│  • Top-10 tags per movie         │
+│  • One-hot encoding             │
+│  • Top-10 tags per movie        │
 └───────────┬─────────────────────┘
             │
             ▼
 ┌─────────────────────────────────┐
 │  Step 4: Apriori Mining         │
-│  • min_support=0.005             │
-│  • min_confidence=0.2            │
-│  • max_itemset_length=5          │
+│  • min_support=0.005            │
+│  • min_confidence=0.2           │
+│  • max_itemset_length=5         │
 └───────────┬─────────────────────┘
             │
             ▼
 ┌─────────────────────────────────┐
 │  1,446 Association Rules        │
-│  (148 high-quality)             │
+│  (148 high-confidence and lift) │
 └─────────────────────────────────┘
 ```
 
@@ -215,8 +215,6 @@ rules = association_rules(
 | `max_itemset_length`      | 5            | Prevents overly complex rules               |
 | `tag_frequency_threshold` | 500 movies   | Ensures statistical significance            |
 | `top_n_tags_per_movie`    | 10           | Focuses on strongest associations           |
-
----
 
 ## Experiments & Results
 
@@ -309,10 +307,6 @@ Interpretation: Rpmantic comedies / romance themes predominantly have happy endi
 - Avg. genre overlap: 1.2/3 tags
 - **Diversity gain: 60-80%** while maintaining semantic coherence
 
-### Demo
-
-[Click here](https://drive.google.com/file/d/134STYUIj2mzGJ2nPYNsm7wAgXZcNRSOX/view?usp=sharing)
-
 ### Visualizations
 
 All visualizations are generated at 300 DPI and saved to `output/visualizations/`:
@@ -325,7 +319,9 @@ All visualizations are generated at 300 DPI and saved to `output/visualizations/
 6. **Recommendation Comparison** ([recommendation_comparison.png](output/visualizations/recommendation_comparison.png)) - Baseline vs. Semantic
 7. **Diversity Analysis** ([diversity_analysis.png](output/visualizations/diversity_analysis.png)) - Novelty scoring
 
----
+### Demo
+
+[Click here](https://drive.google.com/file/d/134STYUIj2mzGJ2nPYNsm7wAgXZcNRSOX/view?usp=sharing)
 
 ## Discussion
 
@@ -370,14 +366,12 @@ All visualizations are generated at 300 DPI and saved to `output/visualizations/
 
 - **Iterative Refinement**: Progressive consolidation (kids/family, gore/gory) reduced rules from 1,720 → 1,446 while maintaining semantic coherence.
 
-- **Lift > Confidence**: High-lift rules (e.g., lift=41.12 for fairy tale magic) revealed surprising semantic clusters, while high-confidence rules (e.g., 100% for bizarre→surrealism) captured reliable patterns.
+- **Lift and Confidence**: High-lift rules (e.g., lift=33.79 for period piece -> costume drama) revealed surprising semantic clusters, while high-confidence rules (e.g., 100% for bizarre → surrealism) captured reliable patterns.
 
 - **Diversity-Relevance Tradeoff**: Semantic associations increased diversity by 60-80% but occasionally recommended tangentially related films (e.g., _Blade Runner_ for _The Godfather_ via "dystopia"). The recommendation comparison shows my method achieves higher diversity while maintaining relevance.
 
   ![Recommendation Comparison](output/visualizations/recommendation_comparison.png)
-  _Figure 6: Baseline (genre-based) vs. Semantic Association recommendations showing 60-80% diversity improvement_ on the matrix.
-
----
+  _Figure 6: Baseline (genre-based) vs. Semantic Association recommendations showing 60-80% diversity improvement_ for the movie, The Matrix.
 
 ## Ethical Considerations
 
@@ -390,8 +384,6 @@ All visualizations are generated at 300 DPI and saved to `output/visualizations/
 
 - MovieLens data is anonymized with no PII
 - Tag-relevance scores are aggregated across users, preventing individual preference inference
-
----
 
 ## Conclusion
 
@@ -409,8 +401,6 @@ This project demonstrates that **association rule mining + transformer-based NLP
 3. **Deep Learning Integration**: Use rule-guided attention mechanisms in neural recommenders
 4. **Multilingual Expansion**: Extend to non-English tags with mBERT embeddings
 5. **Real-Time Updates**: Implement incremental Apriori for streaming movie releases
-
----
 
 ## Installation & Usage
 
@@ -459,8 +449,6 @@ jupyter notebook notebooks/assoc_rule_mining.ipynb
 python scripts/generate_visualizations.py
 ```
 
----
-
 ## References
 
 [1] R. Agrawal and R. Srikant, “Fast algorithms for mining association rules,”
@@ -490,20 +478,3 @@ Minneapolis, MN, USA, 2019, pp. 4171–4186.
 [8] R. Vyshnavi, “Genre Based Movie Recommendation System Using Collaborative Filtering,” International Journal of Research Publication and Reviews (IJRPR), vol. 4, no. 12, pp. 4029–4032, Dec. 2023. [Online]. Available: https://ijrpr.com/uploads/V4ISSUE12/IJRPR20642.pdf
 
 [9] S. R. S. Reddy, S. Nalluri, S. Kunisetti, S. Ashok, and B. Venkatesh, “Content-Based Movie Recommendation System Using Genre Correlation,” in Proceedings of the Second International Conference on SCI 2018, vol. 2, pp. 391–397, 2019, doi: 10.1007/978-981-13-1927-3_42.
-
----
-
-## License
-
-Academic project for CSC 172 - Data Mining  
-Mindanao State University - Iligan Institute of Technology | 2025
-
-## Author
-
-**Rey Iann V. Tigley** (2022-0224)  
-Contact: [GitHub](https://github.com/noneiann)
-
----
-
-_For detailed progress updates, see [progress.md](progress.md)_  
-_For original project proposal, see [proposal.md](proposal.md)_
