@@ -18,7 +18,7 @@ df_genome_scores = df_genome_scores[
 ]
 print(f"Filtered genome scores count ({RELEVANCE_MIN}-{RELEVANCE_MAX}): {len(df_genome_scores)}")
 
-# Define stop-tags (subjective quality terms)
+# Define stop-tags 
 STOP_TAGS = {
     'good movie', 'great movie', 'classic', 'favorite', 'excellent',
     'bad movie', 'boring', 'entertaining', 'must see', 'highly recommended',
@@ -38,16 +38,13 @@ STOP_TAGS = {
     'slow paced', 'fast paced',
     'long', 'too long', 'too short',
     'travel',
-    # Quality/aesthetic judgments
     'awful', 'horrible', 'amazing cinematography', 'beautiful', 'stunning',
     'beautiful scenery', 'scenic', 'visually stunning',
-    # Production details (non-semantic)
     'big budget', 'low budget', 'pg', 'pg-13',
-    # Subjective descriptors
     'cute', 'cute!', 'predictable', 'goofy',
 }
 
-# Define synonym mappings (consolidate redundant tags)
+# Define synonym mappings 
 TAG_SYNONYMS = {
     'france': 'french',
     'england': 'british',

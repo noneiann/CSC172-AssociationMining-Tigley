@@ -7,14 +7,14 @@
 
 **Student:** Rey Iann V. Tigley (2022-0224)  
 **Course:** CSC 172 - Data Mining  
-**Institution:** University of San Carlos  
+**Institution:** Mindanao State University - Iligan Institute of Technology
 **Date:** December 18, 2025
 
 ---
 
 ## Abstract
 
-Traditional movie recommendation systems rely on broad genre classifications (action, comedy, romance), failing to capture nuanced semantic patterns that define user preferences. This project applies association rule mining to the MovieLens 25M dataset to discover hidden thematic relationships between movie tags, enabling semantic-aware recommendations. Using the Apriori algorithm with transformer-assisted data cleaning, we mined 1,446 association rules from 13,814 movies and 328 curated tags (which were reduced from 1,128 through 217 synonym mappings and 118 stop-tag filters). High-lift rules reveal surprising semantic clusters: fairy tale magic (lift=41.12), superhero adaptations (lift=38.85), and period dramas (lift=33.79). Compared to genre-based baselines, our semantic approach achieves 60-80% higher recommendation diversity while maintaining relevance. The system processes the full pipeline in about 45 seconds (14.73s for mining) and identifies 148 high-confidence rules (confidence≥0.7, lift≥2.0) suitable for production recommendation engines. This work demonstrates that linguistic embeddings (sentence-transformers) combined with traditional mining algorithms can unlock semantically coherent patterns overlooked by collaborative filtering.
+Traditional movie recommendation systems rely on broad genre classifications (action, comedy, romance), failing to capture nuanced semantic patterns that define user preferences. This project applies association rule mining to the MovieLens 25M dataset to discover hidden thematic relationships between movie tags, enabling semantic-aware recommendations. Using the Apriori algorithm with transformer-assisted data cleaning, I mined 1,446 association rules from 13,814 movies and 328 curated tags (which were reduced from 1,128 through 217 synonym mappings and 118 stop-tag filters). High-lift rules reveal surprising semantic clusters: fairy tale magic (lift=41.12), superhero adaptations (lift=38.85), and period dramas (lift=33.79). Compared to genre-based baselines, my semantic approach achieves 60-80% higher recommendation diversity while maintaining relevance. The system processes the full pipeline in about 45 seconds (14.73s for mining) and identifies 148 high-confidence rules (confidence≥0.7, lift≥2.0) suitable for production recommendation engines. This work demonstrates that linguistic embeddings (sentence-transformers) combined with traditional mining algorithms can unlock semantically coherent patterns overlooked by collaborative filtering.
 
 ---
 
@@ -65,17 +65,21 @@ These approaches fail to capture **semantic nuances**. A user who enjoys "Tarant
 - **Agrawal & Srikant (1994)** introduced the Apriori algorithm for market basket analysis, establishing the support-confidence framework for rule evaluation [1]
 - **Han et al. (2000)** developed FP-Growth for efficient mining on dense datasets, reducing candidate generation overhead [2]
 - Traditional applications focused on transactional data (supermarket purchases), not semantic text relationships
+- **Goyani & Chaurasiya (2020)** surveyed association-rule–inspired and collaborative filtering–based movie recommender systems, identifying persistent challenges such as data sparsity, cold-start problems, scalability, and lack of interpretability in rating-driven pattern mining approaches [5]. Their findings highlight that rule mining on user–item interactions alone is insufficient without semantic enrichment.
 
 ### MovieLens Dataset & Recommender Systems
 
 - **Harper & Konstan (2015)** released MovieLens 25M with genome tag-relevance scores, enabling fine-grained semantic analysis beyond ratings [3]
-- **Koren et al. (2009)** demonstrated collaborative filtering limitations: cold-start problems and lack of interpretability
-- Our work bridges content-based (tag semantics) and mining-based (pattern discovery) approaches
+- **Koren et al. (2009)** demonstrated collaborative filtering limitations: cold-start problems and lack of interpretability[4]
+- **Goyani & Chaurasiya (2020)** further emphasized that hybrid recommender systems combining collaborative, content-based, and mining-based techniques are necessary to overcome these limitations, yet noted that most surveyed systems still rely on shallow similarity measures and lack semantic understanding of item descriptions [5].
+- **Vyshnavi (2023)** proposed a genre-based movie recommendation system using traditional collaborative filtering on user–movie rating matrices [8]. The study demonstrates that genre filtering can improve recommendation relevance compared to pure rating-based similarity. However, the system relies on explicit user ratings and predefined genre labels, making it vulnerable to cold-start problems, data sparsity, and limited interpretability, as genre tags are treated as flat categorical features without semantic relationships.
+
+- **Reddy et al. (2019)** introduced a content-based movie recommendation system leveraging genre correlation analysis, where inter-genre relationships are computed to enhance similarity estimation between movies [9]. Their approach improves over naive genre matching by considering genre co-occurrence patterns, but it remains constrained to structured metadata and does not incorporate natural language semantics from tags, descriptions, or user-generated annotations. As a result, semantic nuances (e.g., thematic or contextual similarity across genres) are not fully captured.
 
 ### Transformer Models for Semantic Similarity
 
-- **Reimers & Gurevych (2019)** introduced Sentence-BERT, enabling efficient semantic similarity computation via cosine distance in embedding space [4]
-- **Devlin et al. (2019)** showed BERT's effectiveness for understanding linguistic nuances, crucial for tag consolidation (e.g., "psychiatrist" ≈ "psychiatry") [5]
+- **Reimers & Gurevych (2019)** introduced Sentence-BERT, enabling efficient semantic similarity computation via cosine distance in embedding space [6]
+- **Devlin et al. (2019)** showed BERT's effectiveness for understanding linguistic nuances, crucial for tag consolidation (e.g., "psychiatrist" ≈ "psychiatry") [7]
 
 ---
 
@@ -146,6 +150,8 @@ These approaches fail to capture **semantic nuances**. A user who enjoys "Tarant
 **1. Synonym Consolidation (217 mappings)**
 
 Transformer model `sentence-transformers/all-MiniLM-L6-v2` identified 438 similar pairs (similarity >0.7). After manual review:
+
+Mappings were input manually to the clean_dataset.py script
 
 ```python
 # Example mappings
@@ -284,9 +290,9 @@ Interpretation: Dystopian themes strongly predict futuristic science fiction set
 #### 7. Romance Patterns (Lift=20.17)
 
 ```
-Rule: {happy ending, relationships} → {romantic comedy, romance}
+Rule: {romantic comedy, romance} → {happy ending, relationships}
 Confidence: 74.77% | Support: 0.60%
-Interpretation: Relationship-focused films with happy endings are predominantly romantic comedies
+Interpretation: Rpmantic comedies / romance themes predominantly have happy endings and deal with relationships
 ```
 
 ### Recommendation Diversity Comparison
@@ -296,16 +302,20 @@ Interpretation: Relationship-focused films with happy endings are predominantly 
 - Seed: _The Matrix (1999)_ → Recommends only "sci-fi action" films
 - Avg. genre overlap: 2.8/3 tags
 
-**Semantic Association (Our Method):**
+**Semantic Association (My Method):**
 
 - Seed: _The Matrix (1999)_ → Recommends films sharing "dystopia", "philosophical", "mind-bending"
 - Includes: _Dark City_ (noir), _Blade Runner_ (neo-noir), _Memento_ (psychological thriller)
 - Avg. genre overlap: 1.2/3 tags
 - **Diversity gain: 60-80%** while maintaining semantic coherence
 
+### Demo
+
+[Click here](https://drive.google.com/file/d/134STYUIj2mzGJ2nPYNsm7wAgXZcNRSOX/view?usp=sharing)
+
 ### Visualizations
 
-All visualizations generated at 300 DPI and saved to `output/visualizations/`:
+All visualizations are generated at 300 DPI and saved to `output/visualizations/`:
 
 1. **Rule Scatter Plot** ([rule_scatter.png](output/visualizations/rule_scatter.png)) - Confidence vs. Lift distribution
 2. **Network Graph** ([network_graph.png](output/visualizations/network_graph.png)) - Top 200 rules as directed graph
@@ -334,27 +344,25 @@ All visualizations generated at 300 DPI and saved to `output/visualizations/`:
 3. **High-Lift Filtering**: Prioritizing lift≥2.0 rules eliminated trivial associations (e.g., "action → guns") and surfaced surprising patterns (e.g., "superhero adaptations" lift=38.85, "period dramas" lift=33.79). The network graph visualizes these semantic clusters, with fantasy/magic, superhero/comics, and horror/supernatural forming distinct communities.
 
    ![Rules Network Graph](output/visualizations/rules_network.png)
-   _Figure 3: Network visualization of top 200 association rules showing semantic clustering. Node size indicates rule strength; edge color represents lift values_
+   _Figure 3: Network visualization of top 50 association rules showing semantic clustering. Node size indicates rule strength; edge color represents lift values_
 
-4. **Interpretability**: Unlike black-box collaborative filtering, rules provide actionable insights (e.g., "Users who like dystopian themes also appreciate philosophical sci-fi"). The metrics comparison demonstrates that our rules achieve both high confidence (mean=0.58) and strong lift (mean=8.2).
+4. **Interpretability**: Unlike black-box collaborative filtering, rules provide actionable insights (e.g., "Users who like dystopian themes also appreciate philosophical sci-fi"). The metrics comparison demonstrates that my rules achieve both high confidence (mean=0.58) and strong lift (mean=8.2).
 
    ![Rule Metrics Comparison](output/visualizations/rule_metrics.png)
    _Figure 4: Distribution of support, confidence, and lift metrics across all 1,446 rules_
 
-5. **Tag Co-occurrence Patterns**: The heatmap reveals strong semantic clusters, with animation-family-kids forming a tight group, and horror-supernatural-gore clustering separately, validating our manual consolidation decisions.
+5. **Tag Co-occurrence Patterns**: The heatmap reveals strong semantic clusters, with animation-family-kids forming a tight group, and horror-supernatural-gore clustering separately, validating my manual consolidation decisions.
 
    ![Tag Co-occurrence Heatmap](output/visualizations/tag_cooccurrence.png)
    _Figure 5: Heatmap showing tag co-occurrence patterns. Darker colors indicate stronger associations between tag pairs_
 
 ### Limitations
 
-1. **Cold-Start Problem**: Requires movies to have sufficient tag annotations. New releases with <10 tags produce unreliable rules.
+1. **Genre Bias**: Dataset skews toward Western films (78% English-language). Asian/African cinema underrepresented.
 
-2. **Genre Bias**: Dataset skews toward Western films (78% English-language). Asian/African cinema underrepresented.
+2. **Temporal Gap**: MovieLens 25M covers pre-2019 data. Recent trends (e.g., A24 indie aesthetics) not captured.
 
-3. **Temporal Gap**: MovieLens 25M covers pre-2019 data. Recent trends (e.g., A24 indie aesthetics) not captured.
-
-4. **Computational Cost**: Transformer analysis required 12GB RAM and 5 minutes for 1,128 tags. Scalability concerns for larger vocabularies.
+3. **User Aggregated Inconsistencies**: User aggregated tags often introduce naming inconsistencies like french and france, which can lead to duplicate tag variables, NLP assistance can limit these by merging similar tags, but low context models usually cannot capture 100% of these inconsistencies.
 
 ### Key Insights
 
@@ -364,13 +372,10 @@ All visualizations generated at 300 DPI and saved to `output/visualizations/`:
 
 - **Lift > Confidence**: High-lift rules (e.g., lift=41.12 for fairy tale magic) revealed surprising semantic clusters, while high-confidence rules (e.g., 100% for bizarre→surrealism) captured reliable patterns.
 
-- **Diversity-Relevance Tradeoff**: Semantic associations increased diversity by 60-80% but occasionally recommended tangentially related films (e.g., _Blade Runner_ for _The Godfather_ via "dystopia"). The recommendation comparison shows our method achieves higher diversity while maintaining relevance.
+- **Diversity-Relevance Tradeoff**: Semantic associations increased diversity by 60-80% but occasionally recommended tangentially related films (e.g., _Blade Runner_ for _The Godfather_ via "dystopia"). The recommendation comparison shows my method achieves higher diversity while maintaining relevance.
 
   ![Recommendation Comparison](output/visualizations/recommendation_comparison.png)
-  _Figure 6: Baseline (genre-based) vs. Semantic Association recommendations showing 60-80% diversity improvement_
-
-  ![Diversity Analysis](output/visualizations/diversity_analysis.png)
-  _Figure 7: Novelty scoring demonstrates semantic recommendations surface more unique, less popular films while maintaining relevance_
+  _Figure 6: Baseline (genre-based) vs. Semantic Association recommendations showing 60-80% diversity improvement_ on the matrix.
 
 ---
 
@@ -386,16 +391,11 @@ All visualizations generated at 300 DPI and saved to `output/visualizations/`:
 - MovieLens data is anonymized with no PII
 - Tag-relevance scores are aggregated across users, preventing individual preference inference
 
-### Misuse Potential
-
-- Association rules could amplify **filter bubbles** if deployed without diversity controls
-- **Recommendation**: Implement exploration-exploitation balance (ε-greedy) to expose users to novel content
-
 ---
 
 ## Conclusion
 
-This project demonstrates that **association rule mining + transformer-based NLP** can unlock semantic patterns in movie data that traditional recommendation systems miss. By reducing 1,128 tags to 328 curated descriptors and mining 1,446 rules, we achieved:
+This project demonstrates that **association rule mining + transformer-based NLP** can unlock semantic patterns in movie data that traditional recommendation systems miss. By reducing 1,128 tags to 328 curated descriptors and mining 1,446 rules, I achieved:
 
 1. **70.9% noise reduction** through transformer-assisted synonym consolidation
 2. **60-80% diversity gain** in recommendations via semantic associations
@@ -414,13 +414,6 @@ This project demonstrates that **association rule mining + transformer-based NLP
 
 ## Installation & Usage
 
-### Prerequisites
-
-```bash
-# Python 3.13+ with pip
-python --version  # Verify Python 3.13+
-```
-
 ### Setup
 
 ```bash
@@ -428,7 +421,7 @@ python --version  # Verify Python 3.13+
 git clone https://github.com/noneiann/CSC172-AssociationMining-Tigley.git
 cd CSC172-AssociationMining-Tigley
 
-# Create virtual environment (Windows)
+# Create virtual environment
 python -m venv .venv
 .venv\Scripts\activate
 
@@ -452,14 +445,6 @@ jupyter>=1.0.0
 
 ### Running the Pipeline
 
-#### Option 1: Full Automated Pipeline
-
-```bash
-python scripts/run_pipeline.py
-```
-
-#### Option 2: Step-by-Step Execution
-
 ```bash
 # Step 1: Data Cleaning (outputs to datasets/cleaned/)
 python src/preprocessing/clean_dataset.py
@@ -469,93 +454,49 @@ python src/preprocessing/format_dataset.py
 
 # Step 3: Association Mining (open Jupyter notebook)
 jupyter notebook notebooks/assoc_rule_mining.ipynb
-# Run all cells (Ctrl+Enter through each)
 
 # Step 4: Visualizations (outputs to output/visualizations/)
 python scripts/generate_visualizations.py
-```
-
-### Project Structure
-
-```
-CSC172-AssociationMining-Tigley/
-│
-├── src/
-│   ├── preprocessing/
-│   │   ├── clean_dataset.py          # 217 synonym mappings + 118 stop-tags
-│   │   ├── format_dataset.py         # Transaction construction
-│   │   ├── analyze_dataset.py        # Data exploration
-│   │   └── view_dataset.py           # Quick data preview
-│   ├── mining/
-│   │   └── enhanced_recommendations.py  # Semantic recommendation engine
-│   └── visualization/
-│       └── visualizations.py         # 7 plot types
-│
-├── scripts/
-│   ├── run_pipeline.py              # Master automation
-│   └── generate_visualizations.py   # Batch visualization
-│
-├── notebooks/
-│   └── assoc_rule_mining.ipynb      # Interactive mining workflow
-│
-├── datasets/
-│   ├── genome-scores.csv            # Raw MovieLens data
-│   ├── genome-tags.csv
-│   ├── movies.csv
-│   ├── transactions.csv             # Formatted transactions
-│   └── onehot.csv                   # One-hot encoded
-│
-├── output/
-│   └── visualizations/              # 7 PNG plots (300 DPI)
-│
-├── docs/
-│   ├── progress.md                  # Development log
-│   └── proposal.md                  # Project proposal
-│
-└── README.md                        # This file
-```
-
-### Usage Example
-
-```python
-# Load rules from notebook
-import pandas as pd
-rules = pd.read_csv('output/association_rules.csv')
-
-# Filter high-quality rules
-high_quality = rules[(rules['confidence'] >= 0.7) & (rules['lift'] >= 2.0)]
-
-# Generate recommendations
-from src.mining.enhanced_recommendations import hybrid_recommendation
-recommendations = hybrid_recommendation(
-    seed_movie="The Matrix (1999)",
-    rules=rules,
-    df_transactions=df_transactions,
-    top_n=10,
-    diversity_weight=0.3
-)
 ```
 
 ---
 
 ## References
 
-[1] Agrawal, R., & Srikant, R. (1994). Fast algorithms for mining association rules. _Proc. VLDB_, 487-499.
+[1] R. Agrawal and R. Srikant, “Fast algorithms for mining association rules,”
+in Proc. 20th Int. Conf. Very Large Data Bases (VLDB), Santiago, Chile, 1994,
+pp. 487–499.
 
-[2] Han, J., Pei, J., & Yin, Y. (2000). Mining frequent patterns without candidate generation. _ACM SIGMOD Record_, 29(2), 1-12.
+[2] J. Han, J. Pei, and Y. Yin, “Mining frequent patterns without candidate generation,”
+ACM SIGMOD Rec., vol. 29, no. 2, pp. 1–12, Jun. 2000.
 
-[3] Harper, F. M., & Konstan, J. A. (2015). The MovieLens datasets: History and context. _ACM Transactions on Interactive Intelligent Systems_, 5(4), 1-19.
+[3] F. M. Harper and J. A. Konstan, “The MovieLens datasets: History and context,”
+ACM Trans. Interact. Intell. Syst., vol. 5, no. 4, pp. 1–19, Dec. 2015.
 
-[4] Reimers, N., & Gurevych, I. (2019). Sentence-BERT: Sentence embeddings using Siamese BERT-networks. _EMNLP_, 3982-3992.
+[4] Y. Koren, “Collaborative filtering with temporal dynamics,”
+in Proc. 15th ACM SIGKDD Int. Conf. Knowledge Discovery and Data Mining (KDD),
+Paris, France, Jun. 2009, pp. 447–456, doi: 10.1145/1557019.1557072.
 
-[5] Devlin, J., Chang, M. W., Lee, K., & Toutanova, K. (2019). BERT: Pre-training of deep bidirectional transformers for language understanding. _NAACL_, 4171-4186.
+[5] C. N. Sunilkumar, “A review of movie recommendation system: Limitations, Survey and Challenges,” ELCVIA Electronic Letters on Computer Vision and Image Analysis, vol. 19, no. 3, pp. 18–37, Sep. 2020, doi: 10.5565/rev/elcvia.1232.
+
+[6] N. Reimers and I. Gurevych, “Sentence-BERT: Sentence embeddings using Siamese BERT-networks,”
+in Proc. 2019 Conf. Empirical Methods in Natural Language Processing (EMNLP),
+Hong Kong, 2019, pp. 3982–3992.
+
+[7] J. Devlin, M.-W. Chang, K. Lee, and K. Toutanova, “BERT: Pre-training of deep bidirectional transformers for language understanding,”
+in Proc. 2019 Conf. North American Chapter of the Association for Computational Linguistics (NAACL),
+Minneapolis, MN, USA, 2019, pp. 4171–4186.
+
+[8] R. Vyshnavi, “Genre Based Movie Recommendation System Using Collaborative Filtering,” International Journal of Research Publication and Reviews (IJRPR), vol. 4, no. 12, pp. 4029–4032, Dec. 2023. [Online]. Available: https://ijrpr.com/uploads/V4ISSUE12/IJRPR20642.pdf
+
+[9] S. R. S. Reddy, S. Nalluri, S. Kunisetti, S. Ashok, and B. Venkatesh, “Content-Based Movie Recommendation System Using Genre Correlation,” in Proceedings of the Second International Conference on SCI 2018, vol. 2, pp. 391–397, 2019, doi: 10.1007/978-981-13-1927-3_42.
 
 ---
 
 ## License
 
 Academic project for CSC 172 - Data Mining  
-Mindanao State University, Iligan Institute of Society | 2025
+Mindanao State University - Iligan Institute of Technology | 2025
 
 ## Author
 
